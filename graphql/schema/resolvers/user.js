@@ -19,10 +19,12 @@ const query = {
     },
     resolve: async (parent, args, req) => {
       const { page = 1, limit = 20, sort } = args
-      return await UserModel.find()
+      const users = await UserModel.find()
         .limit(limit)
         .skip((page - 1) * limit)
         .sort(sort)
+
+      return { users }
     },
   },
 }
