@@ -7,8 +7,11 @@ const schema = require('./graphql/schema')
 
 const app = express()
 
+const LOCAL_DB_URI = `mongodb://localhost:${process.env.DB_PORT}/moviedb`
+const DB_URI = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.av114cv.mongodb.net/test`
+
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/moviedb', {
+mongoose.connect(DB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
@@ -24,18 +27,8 @@ mongoose.connection.once('open', () => {
 
 const developmentWhitelist = ['http://localhost:3000', `http://localhost:4000`]
 
-const origins = {
-  development: (origin, callback) => {
-    if (developmentWhitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  },
-}
-
 const corsOptions = {
-  origin: origins[process.env.NODE_ENV],
+  origin: developmentWhitelist,
   credentials: true,
 }
 
